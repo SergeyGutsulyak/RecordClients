@@ -1,0 +1,276 @@
+{
+  "_id": "user_123",
+  "name": "Иван Иванов",
+  "role": "specialist",
+  "clients": {
+    "client_456": {
+      "name": "Мария Петрова",
+      "phone": "+79051234567",
+      "email": "maria@example.com",
+      "lastVisited": "2025-06-05"
+    },
+    "client_789": {
+      "name": "Александр Смирнов",
+      "phone": "+79057654321",
+      "email": "",
+      "lastVisited": "2025-06-06"
+    },
+    "client_101": {
+      "name": "Дмитрий Сидоров",
+      "phone": "+79051112233",
+      "email": "dmitry@example.com",
+      "lastVisited": "2025-06-05"
+    }
+  },
+  "appointments": {
+    "2025-06-05": [
+      {
+        "id": "a1",
+        "start": "10:00",
+        "duration": 60,
+        "clientId": "client_456",
+        "title": "Мужская стрижка",
+        "type": "haircut",
+        "status": "confirmed",
+        "notes": "Хочу короткую стрижку"
+      },
+      {
+        "id": "a2",
+        "start": "11:00",
+        "duration": 30,
+        "clientId": null,
+        "title": "Свободное время",
+        "type": "free",
+        "status": "free",
+        "notes": ""
+      }
+    ],
+    "2025-06-06": [
+      {
+        "id": "a3",
+        "start": "09:00",
+        "duration": 60,
+        "clientId": "client_789",
+        "title": "Массаж спины",
+        "type": "massage",
+        "status": "confirmed",
+        "notes": "После тренировки"
+      }
+    ],
+    "2025-06-07": [],
+    "2025-06-08": [
+      {
+        "id": "a4",
+        "start": "11:00",
+        "duration": 60,
+        "clientId": "client_101",
+        "title": "Стрижка",
+        "type": "haircut",
+        "status": "confirmed",
+        "notes": "Приходить вовремя"
+      }
+    ],
+    "2025-06-09": [
+      {
+        "id": "a5",
+        "start": "15:00",
+        "duration": 30,
+        "clientId": "client_456",
+        "title": "Маникюр",
+        "type": "manicure",
+        "status": "pending",
+        "notes": "Могу прийти позже"
+      },
+      {
+        "id": "a6",
+        "start": "16:00",
+        "duration": 60,
+        "clientId": "client_101",
+        "title": "Консультация",
+        "type": "consultation",
+        "status": "confirmed",
+        "notes": ""
+      }
+    ],
+    "2025-06-10": [
+      {
+        "id": "a7",
+        "start": "10:00",
+        "duration": 30,
+        "clientId": "client_789",
+        "title": "Окрашивание",
+        "type": "haircut",
+        "status": "confirmed",
+        "notes": "Цвет: шоколадный блонд"
+      }
+    ],
+    "2025-06-12": [
+      {
+        "id": "a8",
+        "start": "12:00",
+        "duration": 60,
+        "clientId": "client_456",
+        "title": "Массаж",
+        "type": "massage",
+        "status": "confirmed",
+        "notes": "Люблю глубокую проработку мышц"
+      }
+    ],
+    "2025-06-14": [
+      {
+        "id": "a9",
+        "start": "09:00",
+        "duration": 60,
+        "clientId": "client_101",
+        "title": "Подравнивание",
+        "type": "haircut",
+        "status": "confirmed",
+        "notes": "Второй раз у вас"
+      }
+    ],
+    "2025-06-15": [
+      {
+        "id": "a10",
+        "start": "14:00",
+        "duration": 60,
+        "clientId": "client_456",
+        "title": "Массаж лица",
+        "type": "facial",
+        "status": "confirmed",
+        "notes": "Без маски"
+      }
+    ],
+    "2025-06-16": [
+      {
+        "id": "a11",
+        "start": "11:00",
+        "duration": 30,
+        "clientId": "client_789",
+        "title": "Стрижка",
+        "type": "haircut",
+        "status": "confirmed",
+        "notes": ""
+      }
+    ],
+    "2025-06-19": [
+      {
+        "id": "a12",
+        "start": "10:00",
+        "duration": 60,
+        "clientId": "client_101",
+        "title": "Мужская стрижка",
+        "type": "haircut",
+        "status": "confirmed",
+        "notes": "Привожу друга"
+      },
+      {
+        "id": "a13",
+        "start": "11:00",
+        "duration": 30,
+        "clientId": null,
+        "title": "Свободное время",
+        "type": "free",
+        "status": "free",
+        "notes": ""
+      }
+    ],
+    "2025-06-20": [
+      {
+        "id": "a14",
+        "start": "12:00",
+        "duration": 60,
+        "clientId": "client_456",
+        "title": "Массаж спины",
+        "type": "massage",
+        "status": "confirmed",
+        "notes": "Только мужской массаж"
+      }
+    ],
+    "2025-06-21": [
+      {
+        "id": "a15",
+        "start": "16:00",
+        "duration": 60,
+        "clientId": "client_789",
+        "title": "Консультация",
+        "type": "consultation",
+        "status": "confirmed",
+        "notes": "Хочу попробовать новую стрижку"
+      }
+    ],
+    "2025-06-22": [
+      {
+        "id": "a16",
+        "start": "09:00",
+        "duration": 30,
+        "clientId": "client_101",
+        "title": "Маникюр",
+        "type": "manicure",
+        "status": "confirmed",
+        "notes": "Цвет: красный гель"
+      }
+    ],
+    "2025-06-23": [],
+    "2025-06-24": [
+      {
+        "id": "a17",
+        "start": "14:00",
+        "duration": 60,
+        "clientId": "client_456",
+        "title": "Массаж спины",
+        "type": "massage",
+        "status": "confirmed",
+        "notes": "Не рано не поздно!"
+      }
+    ],
+    "2025-06-26": [
+      {
+        "id": "a18",
+        "start": "10:00",
+        "duration": 60,
+        "clientId": "client_789",
+        "title": "Стрижка",
+        "type": "haircut",
+        "status": "confirmed",
+        "notes": "Хочу как на фото"
+      }
+    ],
+    "2025-06-27": [
+      {
+        "id": "a19",
+        "start": "11:00",
+        "duration": 30,
+        "clientId": "client_101",
+        "title": "Укладка",
+        "type": "haircut",
+        "status": "confirmed",
+        "notes": ""
+      }
+    ],
+    "2025-06-28": [
+      {
+        "id": "a20",
+        "start": "09:00",
+        "duration": 60,
+        "clientId": "client_456",
+        "title": "Массаж",
+        "type": "massage",
+        "status": "confirmed",
+        "notes": "Первый визит"
+      }
+    ],
+    "2025-06-29": [],
+    "2025-06-30": [
+      {
+        "id": "a21",
+        "start": "15:00",
+        "duration": 30,
+        "clientId": "client_789",
+        "title": "Консультация",
+        "type": "consultation",
+        "status": "pending",
+        "notes": "Нужен ответ до 28.04"
+      }
+    ]
+  }
+}

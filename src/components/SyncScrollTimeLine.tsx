@@ -1,7 +1,7 @@
 // src/components/SyncScrollTimeLine.tsx
 import React, { useRef } from 'react';
 import { View, Text, ScrollView, StyleSheet, NativeSyntheticEvent, NativeScrollEvent } from 'react-native';
-import Svg, { Rect } from 'react-native-svg';
+
 
 type Appointment = {
   id: string;
