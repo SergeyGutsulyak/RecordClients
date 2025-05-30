@@ -5,6 +5,7 @@ export const CALENDAR_SETTINGS = {
   TOTAL_HOURS: 24,
   SEGMENT_HEIGHT: 40,
   PIXELS_PER_MINUTE: 1,
+  STEP_MINUTES: 5,
   FULL_WIDTH: 24 * 60, // 24 часа × 60 мин = 1440 px
   INITIAL_SCROLL_X: 8 * 60, // 8 ч × 60 = 480 px
 };
