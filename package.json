@@ -21,10 +21,12 @@
     "react-native-reanimated": "~3.17.4",
     "react-native-table-component": "^1.2.2",
     "react-native-web": "^0.20.0",
-    "styled-components": "^6.1.18"
+    "styled-components": "^6.1.18",
+    "expo-sqlite": "~15.2.12"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",
+    "@babel/plugin-proposal-decorators": "^7.27.1",
     "@types/react": "~19.0.10",
     "typescript": "~5.8.3"
   },

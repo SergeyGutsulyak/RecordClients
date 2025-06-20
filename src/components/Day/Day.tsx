@@ -1,18 +1,41 @@
 // src/components/Day.tsx
-import React from 'react';
+import React, { useState } from 'react';
 import { View, Text, StyleSheet} from 'react-native';
 
 import AppointmentItem from './AppointmentItem';
 import { CALENDAR_SETTINGS } from '../сonstants/calendar';
 import {Appointment} from '../../types/Appointment'
+import { parseTimeToMinutes, formatMinutesToTime} from '../../utils/calendar';
 
 type Props = {
   date: string; // "2025-04-05"
   appointments: Appointment[];
   getClientName?: (id: string) => string;
+  onAppointmentMove?: (appointmentId: string, newStartMinute: number) => void;
+
 };
 
-const Day = ({ date, appointments, getClientName }: Props) => {
+const Day = ({ date, appointments, getClientName, onAppointmentMove}: Props) => {
+  const [items, setItems] = useState(appointments);
+
+  const handleMove = (id: string, newStartMinute: number) => {
+    // Обновляем состояние и отправляем вверх (например, в WeekNavigator)
+    setItems((prev) =>
+      prev.map((appt) =>
+        appt.id === id
+          ? {
+              ...appt,
+              start: formatMinutesToTime(newStartMinute),
+            }
+          : appt
+      )
+    );
+
+    // Передаем наверх
+    if (onAppointmentMove) {
+      onAppointmentMove(id, newStartMinute);
+    }
+  };
   return (
     <View style={styles.container}>
       {/* Шкала записей */}
@@ -29,18 +52,13 @@ const Day = ({ date, appointments, getClientName }: Props) => {
               left={left}
               width={width}
               getClientName={getClientName}
+              onMove={(id, newStartMinute) => handleMove(id, newStartMinute)}
             />
           );
         })}
       </View>
     </View>
   );
-};
-
-// Парсер времени "10:00" → 600 (минут)
-export const parseTimeToMinutes = (time: string): number => {
-  const [hours, minutes] = time.split(':').map(Number);
-  return hours * 60 + minutes;
 };
 
 export default Day;

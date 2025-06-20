@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
 import { View } from 'react-native';
+
 import WeekNavigator from './src/components/WeekNavigator/WeekNavigator';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
+
 
 //import DayHeaders from './src/components/Day/DayHeaders';
 import Day from './src/components/Day/Day';

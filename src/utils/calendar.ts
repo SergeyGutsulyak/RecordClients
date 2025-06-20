@@ -36,3 +36,14 @@
   
     return week;
   };
+
+  export const parseTimeToMinutes = (time: string): number => {
+    const [hours, minutes] = time.split(':').map(Number);
+    return hours * 60 + minutes;
+  };
+
+  export const formatMinutesToTime = (minutes: number): string => {
+    const h = Math.floor(minutes / 60);
+    const m = minutes % 60;
+    return `${h}:${m.toString().padStart(2, '0')}`;
+  };

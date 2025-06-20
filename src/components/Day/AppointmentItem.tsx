@@ -8,7 +8,9 @@ import {
 } from 'react-native';
 
 import { GestureDetector, Gesture } from 'react-native-gesture-handler';
-import Animated, { useAnimatedStyle, useSharedValue, withSpring, useWorkletCallback } from 'react-native-reanimated';
+import Animated, { useAnimatedStyle, useSharedValue, withSpring} from 'react-native-reanimated';
+
+import {parseTimeToMinutes} from '../../utils/calendar'
 
 import {Appointment} from '../../types/Appointment'
 import {CALENDAR_SETTINGS} from '../сonstants/calendar'
@@ -19,13 +21,17 @@ type Props = {
   width: number;
   getClientName?: (id: string) => string;
     // Callback для обновления записи
-    onMove?: (appointmentId: string, newDate: string, newStartMinute: number) => void;
+    // onMove?: (appointmentId: string, newDate: string, newStartMinute: number) => void;
+    onMove?: (appointmentId: string, newStartMinute: number) => void;
 };
 
-const AppointmentItem = ({ appointment, left, width, getClientName }: Props) => {
+const AppointmentItem = ({ appointment, left, width, getClientName, onMove}: Props) => {
   const translateX = useSharedValue(left);
   const translateY = useSharedValue(0);
   const stepPx = CALENDAR_SETTINGS.STEP_MINUTES * CALENDAR_SETTINGS.PIXELS_PER_MINUTE;
+  // const minLeft = CALENDAR_SETTINGS.START_HOUR_VIEW * 60; // например, 8 * 60 = 480
+  // const maxLeft = CALENDAR_SETTINGS.END_HOUR_VIEW * 60 - width; // например, 21 * 60 - width = 1260 - width
+
   const clampToStep = (value: number): number => {
     'worklet'; 
     if (stepPx <= 0 || isNaN(value)) {
@@ -36,7 +42,7 @@ const AppointmentItem = ({ appointment, left, width, getClientName }: Props) => 
   const dragGesture = Gesture.Pan()
     .onStart(() => {
       // Можно добавить эффект поднятия
-      translateY.value = withSpring(-10);
+      translateY.value = withSpring(-5);
     })
     // .onUpdate((event) => {
     //   translateX.value = event.translationX + left;
@@ -51,7 +57,10 @@ const AppointmentItem = ({ appointment, left, width, getClientName }: Props) => 
       // Возвращаем на место или сохраняем новую позицию
       translateY.value = withSpring(0);
       const newLeft = Math.round(translateX.value);
-
+      const newStartMinute = Math.round(newLeft / CALENDAR_SETTINGS.PIXELS_PER_MINUTE);
+      if (onMove && newStartMinute !== parseTimeToMinutes(appointment.start)) {
+        onMove(appointment.id, newStartMinute);
+      }
       console.log(`Запись ${appointment.id} перемещена на ${newLeft}px`);
       // Здесь можно вызвать onMove(appointment.id, newLeft)
     });
