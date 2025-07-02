@@ -13,6 +13,7 @@
     "@expo/metro-runtime": "~5.0.4",
     "@shopify/flash-list": "^1.8.0",
     "expo": "~53.0.9",
+    "expo-sqlite": "~15.2.12",
     "expo-status-bar": "~2.2.3",
     "react": "19.0.0",
     "react-dom": "19.0.0",
@@ -21,8 +22,8 @@
     "react-native-reanimated": "~3.17.4",
     "react-native-table-component": "^1.2.2",
     "react-native-web": "^0.20.0",
-    "styled-components": "^6.1.18",
-    "expo-sqlite": "~15.2.12"
+    "react-redux": "^9.2.0",
+    "styled-components": "^6.1.18"
   },
   "devDependencies": {
     "@babel/core": "^7.25.2",

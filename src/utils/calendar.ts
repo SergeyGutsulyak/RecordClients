@@ -1,8 +1,10 @@
-    export type DayData = {
-        dateStr: string;
-        weekdayShort: string;
-        formatted: string;
-    };
+import { Appointment } from '../types/Appointment';
+
+  export type DayData = {
+    dateStr: string;
+    weekdayShort: string;
+    formatted: string;
+  };
   
   export const getWeekDates = (inputDate: string | Date): DayData[] => {
     const date = typeof inputDate === 'string' ? new Date(inputDate) : inputDate;
@@ -46,4 +48,20 @@
     const h = Math.floor(minutes / 60);
     const m = minutes % 60;
     return `${h}:${m.toString().padStart(2, '0')}`;
+  };
+
+  export const groupAppointmentsByDay = (appointments: Appointment[]): Record<string, Appointment[]> => {
+    const grouped: Record<string, Appointment[]> = {};
+  
+    for (const appt of appointments) {
+      if (!appt.date) continue;
+  
+      if (!grouped[appt.date]) {
+        grouped[appt.date] = [];
+      }
+  
+      grouped[appt.date].push(appt);
+    }
+  
+    return grouped;
   };

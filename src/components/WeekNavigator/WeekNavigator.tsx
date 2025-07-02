@@ -1,23 +1,38 @@
 // src/components/WeekNavigator.tsx
 import React, { useState, useRef, useEffect } from 'react';
-import { Text, View, Button, StyleSheet, ScrollView } from 'react-native';
+import {
+  View,
+  Text,
+  ScrollView,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
 import { CALENDAR_SETTINGS } from '../сonstants/calendar';
 import WeekNavigation from './WeekNavigation'; 
 
 import Day from '../Day/Day';
 
-import { getWeekDates } from '../../utils/calendar';
+import { getWeekDates, groupAppointmentsByDay } from '../../utils/calendar';
 import { Appointment } from '../../types/Appointment';
 import { AppointmentsByDay } from '../../types/AppointmentsByDay';
+import {DateWithFormatted} from '../../types/DateWithFormatted'
 import TimeGrid from './TimeGrid'
-
+import {
+  getAppointmentsForWeek,
+  addNewAppointment,
+  updateAppointmentStart,
+} from '../../database/db';
 type Props = {
   appointmentsByDay: AppointmentsByDay;
   getClientName?: (id: string) => string;
 };
 
-const WeekNavigator = ({ appointmentsByDay, getClientName }: Props) => {
+const WeekNavigator = ({getClientName }: Props) => {
   const [currentDate, setCurrentDate] = useState<Date>(new Date());
+  const [scrollPosition, setScrollPosition] = useState<number>(
+    CALENDAR_SETTINGS.START_HOUR_VIEW * 60
+  );
+  const [appointmentsByDay, setAppointmentsByDay] = useState<Record<string, Appointment[]>>({});
   const scrollViewRef = useRef<ScrollView>(null);
 
   const goToPreviousWeek = () => {
@@ -51,23 +66,17 @@ const WeekNavigator = ({ appointmentsByDay, getClientName }: Props) => {
   };
 
   const days = getWeekDates(currentDate);
+  const weekDates = days.map(d => d.dateStr);
   const weekLabel = `${days[0].formatted} – ${days[6].formatted}`;
-
-    // Автоматическая прокрутка при монтировании или изменении недели
-    useEffect(() => {
-      const initialScrollX = CALENDAR_SETTINGS.START_HOUR_VIEW * 60;
-    
-      // Восстанавливаем последнюю позицию или начальную
-      const positionToRestore = scrollPosition ?? initialScrollX;
-    
-      scrollViewRef.current?.scrollTo({
-        x: positionToRestore,
-        animated: false,
-      });
-    }, [currentDate]);
+// Загружаем записи для недели при изменении currentDate
+useEffect(() => {
+  const loadAppointments = async () => {
+    const grouped = await getAppointmentsForWeek(weekDates);
+    setAppointmentsByDay(grouped);
+  };
+  loadAppointments();
+}, [weekDates]);
   
-  const [scrollPosition, setScrollPosition] = useState<number>(CALENDAR_SETTINGS.START_HOUR_VIEW * 60);
-
   return (
     <View style={styles.container}>
       {/* Кнопки навигации */}
