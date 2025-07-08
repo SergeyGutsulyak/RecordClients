@@ -4,79 +4,57 @@ import {
   View,
   Text,
   ScrollView,
-  TouchableOpacity,
   StyleSheet,
 } from 'react-native';
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../../types/RootState';
 import { CALENDAR_SETTINGS } from '../сonstants/calendar';
 import WeekNavigation from './WeekNavigation'; 
-
 import Day from '../Day/Day';
+import TimeGrid from './TimeGrid'
 
-import { getWeekDates, groupAppointmentsByDay } from '../../utils/calendar';
 import { Appointment } from '../../types/Appointment';
 import { AppointmentsByDay } from '../../types/AppointmentsByDay';
-import {DateWithFormatted} from '../../types/DateWithFormatted'
-import TimeGrid from './TimeGrid'
+import { setAppointments } from '../../store/appointmentsSlice';
+import {getWeekDates} from '../../utils/calendar'
+
 import {
   getAppointmentsForWeek,
   addNewAppointment,
   updateAppointmentStart,
+  getAllAppointments
 } from '../../database/db';
 type Props = {
   appointmentsByDay: AppointmentsByDay;
-  getClientName?: (id: string) => string;
 };
 
-const WeekNavigator = ({getClientName }: Props) => {
-  const [currentDate, setCurrentDate] = useState<Date>(new Date());
+const WeekNavigator = () => {
+
+  const dispatch = useDispatch();
+  const { currentDate } = useSelector((state: RootState) => state.date);
+  const { byId, byDate } = useSelector((state: RootState) => state.appointments);
+  
   const [scrollPosition, setScrollPosition] = useState<number>(
     CALENDAR_SETTINGS.START_HOUR_VIEW * 60
   );
-  const [appointmentsByDay, setAppointmentsByDay] = useState<Record<string, Appointment[]>>({});
+ 
   const scrollViewRef = useRef<ScrollView>(null);
-
-  const goToPreviousWeek = () => {
-    const prevWeek = new Date(currentDate);
-    prevWeek.setDate(prevWeek.getDate() - 7);
-    setCurrentDate(prevWeek);
+// Загружаем записи при изменении даты
+  useEffect(() => {
+    const loadAppointments = async () => {
+    const appts = await getAppointmentsForWeek(currentDate);
+    console.log(appts)
+    dispatch(setAppointments(appts));
   };
 
-  const goToNextWeek = () => {
-    const nextWeek = new Date(currentDate);
-    nextWeek.setDate(nextWeek.getDate() + 7);
-    setCurrentDate(nextWeek);
-  };
-
-  const goToPreviousMonth = () => {
-    const prevMonth = new Date(currentDate);
-    prevMonth.setMonth(prevMonth.getMonth() - 1); // переходим на предыдущий месяц
-    prevMonth.setDate(1); // устанавливаем первый день месяца
-    setCurrentDate(prevMonth);
-  };
-
-  const goToNextMonth = () => {
-    const nextMonth = new Date(currentDate);
-    nextMonth.setMonth(nextMonth.getMonth() + 1);
-    nextMonth.setDate(1);
-    setCurrentDate(nextMonth);
-  };
-
-  const goToToday = () => {
-    setCurrentDate(new Date());
-  };
-
-  const days = getWeekDates(currentDate);
-  const weekDates = days.map(d => d.dateStr);
-  const weekLabel = `${days[0].formatted} – ${days[6].formatted}`;
-// Загружаем записи для недели при изменении currentDate
-useEffect(() => {
-  const loadAppointments = async () => {
-    const grouped = await getAppointmentsForWeek(weekDates);
-    setAppointmentsByDay(grouped);
-  };
   loadAppointments();
-}, [weekDates]);
-  
+}, [currentDate]);
+
+  const currentDay = new Date(currentDate);
+  const days = getWeekDates(currentDay);
+  const weekDates = days.map(d => d.dateStr);
+  // const weekLabel = `${days[0].formatted} – ${days[6].formatted}`;
+
   return (
     <View style={styles.container}>
       {/* Кнопки навигации */}
@@ -109,25 +87,17 @@ useEffect(() => {
             >
               <View style={styles.daysContainer} >
                 <TimeGrid/>
-                    {days.map((day) => (
-                        <Day
-                        key={day.dateStr}
-                        date={day.dateStr}
-                        appointments={appointmentsByDay[day.dateStr] || []}
-                        getClientName={getClientName}
-                        />
+                {days.map((day) => (
+                  <Day
+                    key={day.dateStr}
+                    date={day.dateStr}
+                    appointments={(byDate[day.dateStr] || []).map(id => byId[id])}
+                  />
                     ))}
-                    </View>
+              </View>
             </ScrollView>
         </View>
-        <WeekNavigation
-            goToPreviousWeek={goToPreviousWeek}
-            goToNextWeek={goToNextWeek}
-            goToToday={goToToday}
-            goToPreviousMonth={goToPreviousMonth}
-            goToNextMonth={goToNextMonth}
-            weekLabel={weekLabel}
-        />
+        <WeekNavigation />
     </View>
   );
 };

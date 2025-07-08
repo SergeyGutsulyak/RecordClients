@@ -1,69 +1,61 @@
 // src/components/WeekNavigation.tsx
 import React from 'react';
 import { View, Button, Text, StyleSheet } from 'react-native';
-
-type Props = {
-  goToPreviousWeek: () => void;
-  goToNextWeek: () => void;
-  goToToday: () => void;
-  goToPreviousMonth: () => void; // ← новая пропса
-  goToNextMonth: () => void;    // ← новая пропса
-  weekLabel: string;
-};
-
-const WeekNavigation = ({
+import { useSelector, useDispatch } from 'react-redux';
+import { RootState } from '../../types/RootState';
+import {
   goToPreviousWeek,
   goToNextWeek,
   goToToday,
   goToPreviousMonth,
   goToNextMonth,
-  weekLabel,
-}: Props) => {
+} from '../../store/dateSlice';
+import {getWeekDates} from '../../utils/calendar'
+import { green } from 'react-native-reanimated/lib/typescript/Colors';
+
+const WeekNavigation = () => {
+  const dispatch = useDispatch();
+  const { currentDate } = useSelector((state: RootState) => state.date);
+
+  const days = getWeekDates(currentDate);
+  const weekLabel = `${days[0].formatted} – ${days[6].formatted}`;
+
   return (
-    <View style={styles.container}>
-      <View style={styles.monthNavRow}>
-        <Button title="⬅️ Месяц" onPress={goToPreviousMonth} />
-        <Button title="Месяц ➡️" onPress={goToNextMonth} />
-      </View>
-      <View style={styles.row}>
-        <Button title="←" onPress={goToPreviousWeek} />
+    <View style={styles.navigationContainer}>
+      <View style={styles.topRow}>
+        <Button title="← Неделя" onPress={() => dispatch(goToPreviousWeek())} />
         <Text style={styles.weekLabel}>{weekLabel}</Text>
-        <Button title="→" onPress={goToNextWeek} />
+        <Button title="Неделя →" onPress={() => dispatch(goToNextWeek())} />
       </View>
-      <View style={styles.todayContainer}>
-        <Button title="Сегодня" onPress={goToToday} />
+
+      <View style={styles.bottomRow}>
+        <Button title="← Месяц" onPress={() => dispatch(goToPreviousMonth())} />
+        <Button title="Сегодня" onPress={() => dispatch(goToToday())} />
+        <Button title="Месяц →" onPress={() => dispatch(goToNextMonth())} />
       </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  container: {
+  navigationContainer: {
     marginBottom: 16,
-    height:80,
+    height:200,
+    backgroundColor:"green",
   },
-  monthNavRow: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: 8,
-  },
-  row: {
+  topRow: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
   },
-  todayContainer: {
+  bottomRow: {
+    flexDirection: 'row',
+    justifyContent: 'space-around',
     marginTop: 8,
-    alignItems: 'center',
   },
   weekLabel: {
     fontSize: 16,
     fontWeight: 'bold',
-    textAlign: 'center',
-    flex: 1,
-    marginHorizontal: 8,
-    color: '#333',
   },
 });
 

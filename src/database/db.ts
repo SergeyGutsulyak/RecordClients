@@ -5,6 +5,7 @@ import * as SQLite from 'expo-sqlite';
 import { Appointment } from '../types/Appointment';
 import { seedDatabase } from './seedDatabase';
 import {groupAppointmentsByDay, formatMinutesToTime} from '../utils/calendar'
+import { getWeekDates } from '../utils/calendar';
 
 let db: SQLiteDatabase;
 
@@ -65,16 +66,22 @@ export const getAppointmentsForDay = async (
   }
 };
 
-export const getAppointmentsForWeek = async (dates: string[]): Promise<Record<string, Appointment[]>> => {
+export const getAppointmentsForWeek = async (date: Date): Promise<Appointment[]> => {
+  const days = getWeekDates(date); // получаем дни недели
+  const dates = days.map(d => d.dateStr); // преобразуем в строки
   const db = await getDB();
   const placeholders = dates.map(() => '?').join(', ');
-  const results = await db.getAllAsync<Appointment>(
-    `SELECT * FROM appointments WHERE date IN (${placeholders})`,
-    dates
-  );
+  const query = `SELECT * FROM appointments WHERE date IN (${placeholders})`;
 
+  try {
+    const result = await db.getAllAsync<Appointment>(query, dates);
+    return result;
+  } catch (e) {
+    console.error('Ошибка при загрузке записей:', e);
+    return [];
+  }
   // Группируем по дням
-  return groupAppointmentsByDay(results);
+  // return groupAppointmentsByDay(results);
 };
 
 export const addNewAppointment = async (
