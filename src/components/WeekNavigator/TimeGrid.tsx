@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 
-import { CALENDAR_SETTINGS } from '../сonstants/calendar';
+import { CALENDAR_SETTINGS } from '../../сonstants/calendar';
 
 const TimeGrid = () => {
   const hours = Array.from({ length: CALENDAR_SETTINGS.TOTAL_HOURS }, (_, i) => {

@@ -9,4 +9,15 @@ export type RootState = {
   date: {
     currentDate: Date;
   };
+  dragged: {
+    draggedAppt: {
+      id: string;
+      date: string;
+      left: number;
+      top: number;
+      newDate: string | null;
+      newStart: string | null;
+    } | null;
+    isDragging: boolean;
+  };
 };

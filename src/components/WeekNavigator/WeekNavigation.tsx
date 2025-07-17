@@ -11,7 +11,6 @@ import {
   goToNextMonth,
 } from '../../store/dateSlice';
 import {getWeekDates} from '../../utils/calendar'
-import { green } from 'react-native-reanimated/lib/typescript/Colors';
 
 const WeekNavigation = () => {
   const dispatch = useDispatch();

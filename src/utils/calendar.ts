@@ -1,5 +1,5 @@
 import { Appointment } from '../types/Appointment';
-
+import {CALENDAR_SETTINGS} from '../сonstants/calendar'
   export type DayData = {
     dateStr: string;
     weekdayShort: string;
@@ -64,4 +64,16 @@ import { Appointment } from '../types/Appointment';
     }
   
     return grouped;
+  };
+
+  export const detectDayFromPosition = (left: number): string => {
+    const days = getWeekDates(new Date());
+    const dayIndex = Math.floor(left / CALENDAR_SETTINGS.FULL_WIDTH);
+  
+    // Проверяем, чтобы не выйти за границы массива
+    if (dayIndex < 0 || dayIndex >= days.length) {
+      return ''; // или выбери дефолтную дату
+    }
+  
+    return days[dayIndex].dateStr;
   };

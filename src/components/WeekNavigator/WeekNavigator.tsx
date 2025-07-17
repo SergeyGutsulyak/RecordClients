@@ -8,7 +8,7 @@ import {
 } from 'react-native';
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../types/RootState';
-import { CALENDAR_SETTINGS } from '../сonstants/calendar';
+import { CALENDAR_SETTINGS } from '../../сonstants/calendar';
 import WeekNavigation from './WeekNavigation'; 
 import Day from '../Day/Day';
 import TimeGrid from './TimeGrid'
@@ -20,9 +20,6 @@ import {getWeekDates} from '../../utils/calendar'
 
 import {
   getAppointmentsForWeek,
-  addNewAppointment,
-  updateAppointmentStart,
-  getAllAppointments
 } from '../../database/db';
 type Props = {
   appointmentsByDay: AppointmentsByDay;
@@ -43,7 +40,6 @@ const WeekNavigator = () => {
   useEffect(() => {
     const loadAppointments = async () => {
     const appts = await getAppointmentsForWeek(currentDate);
-    console.log(appts)
     dispatch(setAppointments(appts));
   };
 
