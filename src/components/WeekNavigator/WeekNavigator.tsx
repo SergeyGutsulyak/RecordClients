@@ -13,7 +13,6 @@ import WeekNavigation from './WeekNavigation';
 import Day from '../Day/Day';
 import TimeGrid from './TimeGrid'
 
-import { Appointment } from '../../types/Appointment';
 import { AppointmentsByDay } from '../../types/AppointmentsByDay';
 import { setAppointments } from '../../store/appointmentsSlice';
 import {getWeekDates} from '../../utils/calendar'
@@ -31,9 +30,9 @@ const WeekNavigator = () => {
   const { currentDate } = useSelector((state: RootState) => state.date);
   const { byId, byDate } = useSelector((state: RootState) => state.appointments);
   
-  const [scrollPosition, setScrollPosition] = useState<number>(
-    CALENDAR_SETTINGS.START_HOUR_VIEW * 60
-  );
+  // const [scrollPosition, setScrollPosition] = useState<number>(
+  //   CALENDAR_SETTINGS.START_HOUR_VIEW * 60
+  // );
  
   const scrollViewRef = useRef<ScrollView>(null);
 // Загружаем записи при изменении даты
@@ -48,7 +47,7 @@ const WeekNavigator = () => {
 
   const currentDay = new Date(currentDate);
   const days = getWeekDates(currentDay);
-  const weekDates = days.map(d => d.dateStr);
+  // const weekDates = days.map(d => d.dateStr);
   // const weekLabel = `${days[0].formatted} – ${days[6].formatted}`;
 
   return (
@@ -68,17 +67,17 @@ const WeekNavigator = () => {
                 {/* Прокручиваемая шкала записей справа */}
            <ScrollView
                 ref={scrollViewRef}
-                horizontal
-                showsHorizontalScrollIndicator={false}
+                // horizontal
+                showsVerticalScrollIndicator={false}
                 style={styles.daysScroll}
                 contentContainerStyle={{
-                  minWidth: days.length * CALENDAR_SETTINGS.FULL_WIDTH,
-                  gap: 8,
+                  // minWidth: days.length * CALENDAR_SETTINGS.FULL_WIDTH,
+                  // gap: 8,
                 }}
-                onScroll={(e) => {
-                  const offset = e.nativeEvent.contentOffset.x;
-                  setScrollPosition(offset);
-                }}
+                // onScroll={(e) => {
+                //   const offset = e.nativeEvent.contentOffset.y;
+                //   setScrollPosition(offset);
+                // }}
                 scrollEventThrottle={16}
             >
               <View style={styles.daysContainer} >
@@ -109,7 +108,8 @@ const styles = StyleSheet.create({
       height: 480,
     },
     dayLabelsContainer: {
-      width: 60,
+      flexDirection: 'row',
+      width: 40,
       borderRightWidth: 1,
       borderColor: '#ddd',
       paddingRight: 8,
@@ -138,10 +138,16 @@ const styles = StyleSheet.create({
     },
     daysScroll: {
       flex: 1,
+      // width:400,
+      // flexDirection: 'column',
+      // backgroundColor:'#888'
     },
     daysContainer: {
+      flex:1,
+      flexDirection: 'column',
       gap: 8,
-      // width:600,
+      backgroundColor:'#CCC'
+      // width:400,
     },
   });
 export default WeekNavigator;

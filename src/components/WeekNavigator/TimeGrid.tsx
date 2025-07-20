@@ -9,7 +9,7 @@ const TimeGrid = () => {
     return {
       index: i,
       label: `${hour}:00`,
-      left: i * 60, // 60px на каждый час
+      top: i * 60, // 60px на каждый час
     };
   });
 
@@ -20,9 +20,9 @@ const TimeGrid = () => {
           {/* Линия */}
           <View
             style={[
-              styles.verticalLine,
+              styles.horizontalLine,
               {
-                left: h.left,
+                top: h.top,
               },
             ]}
           />
@@ -32,7 +32,7 @@ const TimeGrid = () => {
             style={[
               styles.hourLabel,
               {
-                left: h.left,
+                top: h.top,
               },
             ]}
           >
@@ -48,18 +48,19 @@ export default TimeGrid;
 
 const styles = StyleSheet.create({
     container: {
+      // flex:1,
       position: 'relative',
-      height: 30,
-      width: CALENDAR_SETTINGS.FULL_WIDTH,
+      height: CALENDAR_SETTINGS.FULL_HEIGHT,
+      width: CALENDAR_SETTINGS.SEGMENT_WIDTH,
       marginBottom: 4,
-      backgroundColor: '#fff',
+      backgroundColor: '#a1a1f1',
       zIndex: 2,
     },
-    verticalLine: {
+    horizontalLine: {
       position: 'absolute',
       top: 0,
       bottom: 0,
-      width: 1,
+      height: 1,
       backgroundColor: '#ddd',
     },
     hourLabel: {
@@ -69,6 +70,6 @@ const styles = StyleSheet.create({
       fontSize: 12,
       color: '#555',
       textAlign: 'center',
-      width: 60,
+      height: 60,
     },
   });

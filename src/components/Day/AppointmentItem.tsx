@@ -35,7 +35,7 @@ export default AppointmentItem;
 const styles = StyleSheet.create({
   appointment: {
     position: 'absolute',
-    height: CALENDAR_SETTINGS.SEGMENT_HEIGHT,
+    width: CALENDAR_SETTINGS.SEGMENT_WIDTH,
     backgroundColor: '#FF3B30', // основной цвет записи
     justifyContent: 'center',
     alignItems: 'center',
