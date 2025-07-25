@@ -3,11 +3,13 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 type DraggedAppointment = {
   id: string;
-  date: string;
-  left: number;
-  top: number;
+  title: string;
+  duration: number;
+  originalDate: string;
   newDate: string | null;
   newStart: string | null;
+  left: number;
+  top: number;
 };
 
 type State = {
@@ -24,32 +26,39 @@ const slice = createSlice({
   name: 'dragged',
   initialState,
   reducers: {
-    startDragging(state, action: PayloadAction<DraggedAppointment>) {
-      state.draggedAppt = action.payload;
+    startDragging(state, action: PayloadAction<{
+      id: string;
+      title: string;
+      duration: number;
+      date: string;
+      left: number;
+      top: number;
+    }>) {
+      const { id, title, duration, date, left, top } = action.payload;
+      state.draggedAppt = {
+        id,
+        title,
+        duration,
+        originalDate: date,
+        newDate: null,
+        newStart: null,
+        left,
+        top,
+      };
       state.isDragging = true;
     },
     updatePosition(state, action: PayloadAction<{ dx: number; dy: number }>) {
       if (!state.draggedAppt) return;
-
-      const { dx, dy } = action.payload;
-      state.draggedAppt.left += dx;
-      state.draggedAppt.top += dy;
+      state.draggedAppt.left += action.payload.dx;
+      state.draggedAppt.top += action.payload.dy;
     },
     endDragging(state, action: PayloadAction<{ newDate: string; newStart: string }>) {
       if (!state.draggedAppt) return;
-
-      const { id } = state.draggedAppt;
-      const { newDate, newStart } = action.payload;
-
-      // Сохраняем новую дату и время
-      state.draggedAppt = {
-        ...state.draggedAppt,
-        newDate,
-        newStart,
-      };
+      state.draggedAppt.newDate = action.payload.newDate;
+      state.draggedAppt.newStart = action.payload.newStart;
       state.isDragging = false;
     },
-    clearDraggedAppointment(state) {
+    clearDragged(state) {
       state.draggedAppt = null;
       state.isDragging = false;
     },
@@ -60,7 +69,7 @@ export const {
   startDragging,
   updatePosition,
   endDragging,
-  clearDraggedAppointment,
+  clearDragged,
 } = slice.actions;
 
 export default slice.reducer;

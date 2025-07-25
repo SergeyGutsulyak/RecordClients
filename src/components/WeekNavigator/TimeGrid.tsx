@@ -52,7 +52,6 @@ const styles = StyleSheet.create({
       position: 'relative',
       height: CALENDAR_SETTINGS.FULL_HEIGHT,
       width: CALENDAR_SETTINGS.SEGMENT_WIDTH,
-      marginBottom: 4,
       backgroundColor: '#a1a1f1',
       zIndex: 2,
     },
@@ -69,7 +68,8 @@ const styles = StyleSheet.create({
       left: 0,
       fontSize: 12,
       color: '#555',
-      textAlign: 'center',
+      textAlign: 'right',
       height: 60,
+      marginLeft:2,
     },
   });

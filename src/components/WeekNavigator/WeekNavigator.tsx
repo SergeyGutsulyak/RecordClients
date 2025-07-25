@@ -9,7 +9,8 @@ import {
 import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../types/RootState';
 import { CALENDAR_SETTINGS } from '../../сonstants/calendar';
-import WeekNavigation from './WeekNavigation'; 
+import WeekNavigation from './WeekNavigation';
+import DraggableAppointmentItem from '../DraggableAppointmentItem'
 import Day from '../Day/Day';
 import TimeGrid from './TimeGrid'
 
@@ -29,26 +30,19 @@ const WeekNavigator = () => {
   const dispatch = useDispatch();
   const { currentDate } = useSelector((state: RootState) => state.date);
   const { byId, byDate } = useSelector((state: RootState) => state.appointments);
-  
-  // const [scrollPosition, setScrollPosition] = useState<number>(
-  //   CALENDAR_SETTINGS.START_HOUR_VIEW * 60
-  // );
  
   const scrollViewRef = useRef<ScrollView>(null);
 // Загружаем записи при изменении даты
   useEffect(() => {
     const loadAppointments = async () => {
-    const appts = await getAppointmentsForWeek(currentDate);
+    const appts = await getAppointmentsForWeek(currentDay);
     dispatch(setAppointments(appts));
   };
-
   loadAppointments();
 }, [currentDate]);
 
   const currentDay = new Date(currentDate);
   const days = getWeekDates(currentDay);
-  // const weekDates = days.map(d => d.dateStr);
-  // const weekLabel = `${days[0].formatted} – ${days[6].formatted}`;
 
   return (
     <View style={styles.container}>
@@ -67,17 +61,10 @@ const WeekNavigator = () => {
                 {/* Прокручиваемая шкала записей справа */}
            <ScrollView
                 ref={scrollViewRef}
-                // horizontal
                 showsVerticalScrollIndicator={false}
                 style={styles.daysScroll}
                 contentContainerStyle={{
-                  // minWidth: days.length * CALENDAR_SETTINGS.FULL_WIDTH,
-                  // gap: 8,
                 }}
-                // onScroll={(e) => {
-                //   const offset = e.nativeEvent.contentOffset.y;
-                //   setScrollPosition(offset);
-                // }}
                 scrollEventThrottle={16}
             >
               <View style={styles.daysContainer} >
@@ -92,6 +79,7 @@ const WeekNavigator = () => {
               </View>
             </ScrollView>
         </View>
+        <DraggableAppointmentItem />
         <WeekNavigation />
     </View>
   );
@@ -101,19 +89,19 @@ const styles = StyleSheet.create({
     container: {
       flex: 1,
       backgroundColor: '#fff',
-      padding: 16,
+      padding: 0,
     },
     calendarRow: {
-      flexDirection: 'row', // ← левая колонка + прокрутка
+      flexDirection: 'column',
       height: 480,
     },
     dayLabelsContainer: {
       flexDirection: 'row',
-      width: 40,
+      width: 50,
       borderRightWidth: 1,
       borderColor: '#ddd',
       paddingRight: 8,
-      marginRight: 8,
+      marginLeft: 40,
     },
     dayLabelItem: {
       paddingVertical: 8,
@@ -137,16 +125,16 @@ const styles = StyleSheet.create({
       marginTop: 4,
     },
     daysScroll: {
-      flex: 1,
+      // flex: 1,
       // width:400,
       // flexDirection: 'column',
       // backgroundColor:'#888'
     },
     daysContainer: {
       flex:1,
-      flexDirection: 'column',
-      gap: 8,
-      backgroundColor:'#CCC'
+      flexDirection: 'row',
+      gap:1,
+      // backgroundColor:'#CCC'
       // width:400,
     },
   });

@@ -5,10 +5,13 @@ import {
   Text,
   StyleSheet,
 } from 'react-native';
-
+import { Gesture, GestureDetector } from 'react-native-gesture-handler';
+import { useDispatch, useSelector } from 'react-redux';
 import {parseTimeToMinutes} from '../../utils/calendar'
 import {Appointment} from '../../types/Appointment'
+import { RootState } from '../../types/RootState';
 import {CALENDAR_SETTINGS} from '../../сonstants/calendar'
+import { startDragging } from '../../store/draggedAppointmentSlice';
 
 type Props = {
   appointment: Appointment;
@@ -17,13 +20,28 @@ type Props = {
 };
 
 const AppointmentItem = ({ appointment, getClientName }: Props) => {
-  const left = parseTimeToMinutes(appointment.start);
-  const width = appointment.duration;
-   // const minLeft = CALENDAR_SETTINGS.START_HOUR_VIEW * 60; // например, 8 * 60 = 480
-  // const maxLeft = CALENDAR_SETTINGS.END_HOUR_VIEW * 60 - width; // например, 21 * 60 - width = 1260 - width
+  const dispatch = useDispatch();
+  const { isDragging } = useSelector((state: RootState) => state.dragged);
+  const top = parseTimeToMinutes(appointment.start);
+  const height = appointment.duration;
+  const longPress = Gesture.LongPress()
+  .minDuration(300)
+  .onStart(() => {
+    dispatch(
+      startDragging({
+        id: appointment.id,
+        title: appointment.title,
+        duration: appointment.duration,
+        date,
+        left,
+        top,
+      })
+    );
+  });
 
   return (
-    <View style={[styles.appointment, { left, width }]}>
+    // <View style={[styles.appointment, { left, width }]}>
+    <View style={[styles.appointment, { top, height}]}>
       <Text style={styles.title}>{appointment.title}</Text>
       <Text style={styles.time}>{appointment.start}</Text>
     </View>
@@ -35,7 +53,6 @@ export default AppointmentItem;
 const styles = StyleSheet.create({
   appointment: {
     position: 'absolute',
-    width: CALENDAR_SETTINGS.SEGMENT_WIDTH,
     backgroundColor: '#FF3B30', // основной цвет записи
     justifyContent: 'center',
     alignItems: 'center',

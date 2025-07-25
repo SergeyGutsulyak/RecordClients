@@ -1,39 +1,24 @@
 // src/components/DraggableAppointmentItem.tsx
 import React, { useEffect } from 'react';
-import Animated, { useSharedValue, useAnimatedStyle } from 'react-native-reanimated';
-import { Gesture, GestureDetector } from 'react-native-gesture-handler';
-import {Text, StyleSheet} from 'react-native';
-import { useSelector, useDispatch } from 'react-redux';
+import { StyleSheet, Text } from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+} from 'react-native-reanimated';
 
 import { CALENDAR_SETTINGS } from '../сonstants/calendar';
-import { Appointment } from '../types/Appointment';
+import { useSelector } from 'react-redux';
 import { RootState } from '../types/RootState';
-import {
-  startDragging,
-  updatePosition,
-  endDragging,
-  clearDraggedAppointment,
-} from '../store/draggedAppointmentSlice';
-import {
-    parseTimeToMinutes,
-    formatMinutesToTime,
-    detectDayFromPosition
-} from '../utils/calendar'
 
-type Props = {
-  appointment: Appointment;
-  date: string;
-};
+const DraggableAppointmentItem = () => {
+  const { draggedAppt, isDragging } = useSelector((state: RootState) => state.dragged);
 
-const DraggableAppointmentItem = ({ appointment, date }: Props) => {
-  const dispatch = useDispatch();
-  const { isDragging, draggedAppt } = useSelector((state: RootState) => state.dragged);
-
-  const translateX = useSharedValue(parseTimeToMinutes(appointment.start));
+  const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
 
+  // Синхронизация с Redux
   useEffect(() => {
-    if (draggedAppt && draggedAppt.id === appointment.id) {
+    if (draggedAppt) {
       translateX.value = draggedAppt.left;
       translateY.value = draggedAppt.top;
     }
@@ -44,66 +29,37 @@ const DraggableAppointmentItem = ({ appointment, date }: Props) => {
       { translateX: translateX.value },
       { translateY: translateY.value },
     ],
-    opacity: isDragging && draggedAppt?.id !== appointment.id ? 0.5 : 1,
+    position: 'absolute',
+    zIndex: 1000,
   }));
 
-    // Создаем жест через новый API
-    const pan = Gesture.Pan()
-    .minDistance(1)
-    .onBegin(() => {
-    dispatch(
-        startDragging({
-        id: appointment.id,
-        date,
-        left: parseTimeToMinutes(appointment.start),
-        top: 0,
-        newDate: null,
-        newStart: null,
-        })
-    );
-    })
-    .onUpdate(event => {
-    if (!isDragging) return;
+  if (!isDragging || !draggedAppt) return null;
 
-    translateX.value = event.translationX;
-    translateY.value = event.translationY;
-
-    dispatch(updatePosition({ dx: event.translationX, dy: event.translationY }));
-    })
-    .onEnd(() => {
-    const newStartMinute = Math.round(translateX.value / CALENDAR_SETTINGS.PIXELS_PER_MINUTE);
-    const newStart = formatMinutesToTime(newStartMinute);
-    const newDate = detectDayFromPosition(translateX.value);
-
-    dispatch(endDragging({ newDate, newStart }));
-    });
   return (
-    <GestureDetector gesture={pan}>
-      <Animated.View style={[styles.appointment, animatedStyle]}>
-        <Text>{appointment.title}</Text>
-      </Animated.View>
-    </GestureDetector>
+    <Animated.View style={[styles.draggedItem, animatedStyle]}>
+      <Text style={styles.text}>{draggedAppt.title}</Text>
+    </Animated.View>
   );
 };
 
-const styles = StyleSheet.create({
-    appointment: {
-      position: 'absolute',
-      height: CALENDAR_SETTINGS.SEGMENT_HEIGHT,
-      width: 60, // можно сделать динамическим через duration
-      backgroundColor: '#FF3B30', // красная запись
-      justifyContent: 'center',
-      alignItems: 'center',
-      borderRadius: 4,
-      zIndex: 2,
-    },
-    text: {
-      color: '#fff',
-      fontSize: 12,
-      fontWeight: 'bold',
-      textAlign: 'center',
-    },
-  });
-
 export default DraggableAppointmentItem;
 
+const styles = StyleSheet.create({
+  draggedItem: {
+    width: 60,
+    height: 60,
+    backgroundColor: '#FF9999',
+    justifyContent: 'center',
+    alignItems: 'center',
+    borderRadius: 4,
+    elevation: 5,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+  },
+  text: {
+    color: '#fff',
+    fontWeight: 'bold',
+  },
+});

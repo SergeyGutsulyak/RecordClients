@@ -7,16 +7,18 @@ export type RootState = {
     byDate: Record<string, string[]>;
   };
   date: {
-    currentDate: Date;
+    currentDate: string;
   };
   dragged: {
     draggedAppt: {
       id: string;
-      date: string;
-      left: number;
-      top: number;
+      title: string;
+      duration: number;
+      originalDate: string;
       newDate: string | null;
       newStart: string | null;
+      left: number;
+      top: number;
     } | null;
     isDragging: boolean;
   };
