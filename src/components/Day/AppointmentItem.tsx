@@ -10,41 +10,51 @@ import { useDispatch, useSelector } from 'react-redux';
 import {parseTimeToMinutes} from '../../utils/calendar'
 import {Appointment} from '../../types/Appointment'
 import { RootState } from '../../types/RootState';
-import {CALENDAR_SETTINGS} from '../../сonstants/calendar'
 import { startDragging } from '../../store/draggedAppointmentSlice';
+import { runOnJS } from 'react-native-reanimated';
 
 type Props = {
   appointment: Appointment;
-  getClientName?: (id: string) => string;
-
+  date: string;
 };
 
-const AppointmentItem = ({ appointment, getClientName }: Props) => {
+const AppointmentItem = ({ appointment, date }: Props) => {
   const dispatch = useDispatch();
   const { isDragging } = useSelector((state: RootState) => state.dragged);
   const top = parseTimeToMinutes(appointment.start);
   const height = appointment.duration;
+
   const longPress = Gesture.LongPress()
-  .minDuration(300)
-  .onStart(() => {
-    dispatch(
-      startDragging({
-        id: appointment.id,
-        title: appointment.title,
-        duration: appointment.duration,
-        date,
-        left,
-        top,
-      })
-    );
-  });
+    .minDuration(300)
+    .onStart(() => {
+      console.log('Долгое нажатие')
+      try {
+        runOnJS(()=>{
+          dispatch(
+          startDragging({
+              id: appointment.id,
+              title: appointment.title,
+              duration: appointment.duration,
+              date,
+              left: 100,
+              top: 500,
+            })
+          );
+    })();
+      } catch (e){
+        console.log(e)
+      }
+      
+    });
 
   return (
-    // <View style={[styles.appointment, { left, width }]}>
-    <View style={[styles.appointment, { top, height}]}>
-      <Text style={styles.title}>{appointment.title}</Text>
-      <Text style={styles.time}>{appointment.start}</Text>
-    </View>
+    <GestureDetector gesture={longPress}>
+      <View 
+        style={[styles.appointment, { top, height}]}>
+        <Text style={styles.title}>{appointment.title}</Text>
+        <Text style={styles.time}>{appointment.start}</Text>
+      </View>
+    </GestureDetector>
   );
 };
 

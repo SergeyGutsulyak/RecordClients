@@ -46,6 +46,7 @@ const slice = createSlice({
         top,
       };
       state.isDragging = true;
+      console.log('startDragging вызван', action.payload);
     },
     updatePosition(state, action: PayloadAction<{ dx: number; dy: number }>) {
       if (!state.draggedAppt) return;

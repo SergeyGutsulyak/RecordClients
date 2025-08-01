@@ -6,13 +6,11 @@ import Animated, {
   useAnimatedStyle,
 } from 'react-native-reanimated';
 
-import { CALENDAR_SETTINGS } from '../сonstants/calendar';
 import { useSelector } from 'react-redux';
 import { RootState } from '../types/RootState';
 
 const DraggableAppointmentItem = () => {
   const { draggedAppt, isDragging } = useSelector((state: RootState) => state.dragged);
-
   const translateX = useSharedValue(0);
   const translateY = useSharedValue(0);
 
@@ -32,9 +30,9 @@ const DraggableAppointmentItem = () => {
     position: 'absolute',
     zIndex: 1000,
   }));
-
+  console.log('drg1')
   if (!isDragging || !draggedAppt) return null;
-
+  console.log('drg2')
   return (
     <Animated.View style={[styles.draggedItem, animatedStyle]}>
       <Text style={styles.text}>{draggedAppt.title}</Text>

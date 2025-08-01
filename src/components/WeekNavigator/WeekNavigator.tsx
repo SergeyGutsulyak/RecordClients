@@ -43,7 +43,7 @@ const WeekNavigator = () => {
 
   const currentDay = new Date(currentDate);
   const days = getWeekDates(currentDay);
-
+ 
   return (
     <View style={styles.container}>
       {/* Кнопки навигации */}
@@ -79,7 +79,7 @@ const WeekNavigator = () => {
               </View>
             </ScrollView>
         </View>
-        <DraggableAppointmentItem />
+        {/* <DraggableAppointmentItem /> */}
         <WeekNavigation />
     </View>
   );
