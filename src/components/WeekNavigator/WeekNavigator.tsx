@@ -69,17 +69,19 @@ const WeekNavigator = () => {
             >
               <View style={styles.daysContainer} >
                 <TimeGrid/>
-                {days.map((day) => (
+                {days.map((day, dayIndex) => (
                   <Day
                     key={day.dateStr}
+                    dayIndex={dayIndex}
                     date={day.dateStr}
                     appointments={(byDate[day.dateStr] || []).map(id => byId[id])}
                   />
                     ))}
               </View>
+              <DraggableAppointmentItem />
             </ScrollView>
         </View>
-        {/* <DraggableAppointmentItem /> */}
+        
         <WeekNavigation />
     </View>
   );

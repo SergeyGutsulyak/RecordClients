@@ -1,5 +1,6 @@
 // src/components/AppointmentItem.tsx
 import React from 'react';
+import { Dimensions } from 'react-native';
 import {
   View,
   Text,
@@ -16,36 +17,36 @@ import { runOnJS } from 'react-native-reanimated';
 type Props = {
   appointment: Appointment;
   date: string;
+  dayIndex:number;
 };
 
-const AppointmentItem = ({ appointment, date }: Props) => {
+const AppointmentItem = ({ appointment, date, dayIndex }: Props) => {
   const dispatch = useDispatch();
   const { isDragging } = useSelector((state: RootState) => state.dragged);
   const top = parseTimeToMinutes(appointment.start);
   const height = appointment.duration;
+  
+  const handleStartDragging = (
+    dispatch: any,
+    payload: Parameters<typeof startDragging>[0]
+  ) => {
+    const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+    payload.left = (SCREEN_WIDTH-7)/8*(dayIndex+1);
+    dispatch(startDragging(payload));
+  };
 
   const longPress = Gesture.LongPress()
-    .minDuration(300)
-    .onStart(() => {
-      console.log('Долгое нажатие')
-      try {
-        runOnJS(()=>{
-          dispatch(
-          startDragging({
-              id: appointment.id,
-              title: appointment.title,
-              duration: appointment.duration,
-              date,
-              left: 100,
-              top: 500,
-            })
-          );
-    })();
-      } catch (e){
-        console.log(e)
-      }
-      
+  .minDuration(300)
+  .onStart(() => {
+    runOnJS(handleStartDragging)(dispatch, {
+      id: appointment.id,
+      title: appointment.title,
+      duration: appointment.duration,
+      date,
+      left:0,
+      top,
     });
+  });
 
   return (
     <GestureDetector gesture={longPress}>

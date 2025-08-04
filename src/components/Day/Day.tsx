@@ -3,17 +3,15 @@ import React, { useState } from 'react';
 import { View, Text, StyleSheet} from 'react-native';
 
 import AppointmentItem from './AppointmentItem';
-import { CALENDAR_SETTINGS } from '../../сonstants/calendar';
 import {Appointment} from '../../types/Appointment'
-import { parseTimeToMinutes, formatMinutesToTime} from '../../utils/calendar';
-import { green } from 'react-native-reanimated/lib/typescript/Colors';
 
 type Props = {
   date: string; // "2025-04-05"
+  dayIndex: number; 
   appointments: Appointment[];
 };
 
-const Day = ({ date, appointments}: Props) => {
+const Day = ({ date, dayIndex, appointments}: Props) => {
   // const [items, setItems] = useState(appointments);
   return (
     <View style={styles.container}>
@@ -23,6 +21,7 @@ const Day = ({ date, appointments}: Props) => {
           return (
             <AppointmentItem
               key={appt.id}
+              dayIndex={dayIndex}
               appointment={appt}
               date={date}
              />

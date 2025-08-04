@@ -30,9 +30,7 @@ const DraggableAppointmentItem = () => {
     position: 'absolute',
     zIndex: 1000,
   }));
-  console.log('drg1')
   if (!isDragging || !draggedAppt) return null;
-  console.log('drg2')
   return (
     <Animated.View style={[styles.draggedItem, animatedStyle]}>
       <Text style={styles.text}>{draggedAppt.title}</Text>
