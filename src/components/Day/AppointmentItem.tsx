@@ -1,18 +1,23 @@
 // src/components/AppointmentItem.tsx
-import React from 'react';
+import React, {useRef, useEffect} from 'react';
 import { Dimensions } from 'react-native';
 import {
   View,
   Text,
   StyleSheet,
 } from 'react-native';
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withSpring,
+} from 'react-native-reanimated';
 import { Gesture, GestureDetector } from 'react-native-gesture-handler';
 import { useDispatch, useSelector } from 'react-redux';
 import {parseTimeToMinutes} from '../../utils/calendar'
 import {Appointment} from '../../types/Appointment'
-import { RootState } from '../../types/RootState';
-import { startDragging } from '../../store/draggedAppointmentSlice';
-import { runOnJS } from 'react-native-reanimated';
+import { RootState } from '../../types/RootState'
+import {CALENDAR_SETTINGS} from '../../сonstants/calendar'
+import {formatMinutesToTime, detectDayFromPosition} from '../../utils/calendar'
 
 type Props = {
   appointment: Appointment;
@@ -22,39 +27,66 @@ type Props = {
 
 const AppointmentItem = ({ appointment, date, dayIndex }: Props) => {
   const dispatch = useDispatch();
+  const ref = useRef(null);
   const { isDragging } = useSelector((state: RootState) => state.dragged);
+
   const top = parseTimeToMinutes(appointment.start);
   const height = appointment.duration;
+  // Анимированные координаты
+  const translateX = useSharedValue(0);
+  const translateY = useSharedValue(0);
+
+  // Начальная позиция
+  const startX = useSharedValue(0);
+  const startY = useSharedValue(0);
   
-  const handleStartDragging = (
-    dispatch: any,
-    payload: Parameters<typeof startDragging>[0]
-  ) => {
-    const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
-    payload.left = (SCREEN_WIDTH-7)/8*(dayIndex+1);
-    dispatch(startDragging(payload));
-  };
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [
+      { translateX: translateX.value },
+      { translateY: translateY.value },
+    ],
+    opacity: isDragging ? 0.7 : 1,
+  }));
 
-  const longPress = Gesture.LongPress()
-  .minDuration(300)
-  .onStart(() => {
-    runOnJS(handleStartDragging)(dispatch, {
-      id: appointment.id,
-      title: appointment.title,
-      duration: appointment.duration,
-      date,
-      left:0,
-      top,
-    });
+
+  // const handleStartDragging = (
+  //   dispatch: any,
+  //   payload: Parameters<typeof startDragging>[0]
+  // ) => {
+  //   const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
+  //   payload.left = (SCREEN_WIDTH-7)/8*(dayIndex+1);
+  //   dispatch(startDragging(payload));
+  // };
+  const pan = Gesture.Pan()
+    .onStart(()=> {
+      // console.log('Start')
+      // ref.current?.measure((x, y, w, h, pageX, pageY) => {
+      //   // Устанавливаем начальную позицию
+      //   startX.value = pageX;
+      //   startY.value = pageY;
+    })
+    .onUpdate((event) => {
+      translateX.value = event.translationX;
+      translateY.value = event.translationY;
+    })
+  .onEnd(() => {
+    const newY = startY.value + translateY.value;
+    const newStartMinute = Math.round(newY / CALENDAR_SETTINGS.PIXELS_PER_MINUTE);
+    console.log((top + newStartMinute)/60)
+    // const newStart = formatMinutesToTime(newStartMinute);
+    // const newDate = detectDayFromPosition(startX.value + translateX.value);
+    // console.log(newStart)
+    // console.log(newDate)
   });
-
+  
   return (
-    <GestureDetector gesture={longPress}>
-      <View 
-        style={[styles.appointment, { top, height}]}>
+    <GestureDetector gesture={pan}>
+      <Animated.View 
+        ref={ref}
+        style={[styles.appointment, animatedStyle, { top, height}]}>
         <Text style={styles.title}>{appointment.title}</Text>
         <Text style={styles.time}>{appointment.start}</Text>
-      </View>
+      </Animated.View>
     </GestureDetector>
   );
 };

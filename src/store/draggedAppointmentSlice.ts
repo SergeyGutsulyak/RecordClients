@@ -53,6 +53,7 @@ const slice = createSlice({
       state.draggedAppt.top += action.payload.dy;
     },
     endDragging(state, action: PayloadAction<{ newDate: string; newStart: string }>) {
+      console.log('store endDragging')
       if (!state.draggedAppt) return;
       state.draggedAppt.newDate = action.payload.newDate;
       state.draggedAppt.newStart = action.payload.newStart;
