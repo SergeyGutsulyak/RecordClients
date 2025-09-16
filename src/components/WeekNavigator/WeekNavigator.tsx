@@ -10,7 +10,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { RootState } from '../../types/RootState';
 import { CALENDAR_SETTINGS } from '../../сonstants/calendar';
 import WeekNavigation from './WeekNavigation';
-import DraggableAppointmentItem from '../DraggableAppointmentItem'
 import Day from '../Day/Day';
 import TimeGrid from './TimeGrid'
 
@@ -78,7 +77,6 @@ const WeekNavigator = () => {
                   />
                     ))}
               </View>
-              <DraggableAppointmentItem />
             </ScrollView>
         </View>
         

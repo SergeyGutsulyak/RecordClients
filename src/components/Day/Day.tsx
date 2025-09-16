@@ -4,7 +4,6 @@ import { View, Text, StyleSheet} from 'react-native';
 
 import AppointmentItem from './AppointmentItem';
 import {Appointment} from '../../types/Appointment'
-
 type Props = {
   date: string; // "2025-04-05"
   dayIndex: number; 

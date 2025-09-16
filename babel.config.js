@@ -1,7 +1,7 @@
 module.exports = {
-    presets: ['expo'],
+    presets: ['babel-preset-expo'],
     plugins: [
       // ...другие плагины
-      'react-native-reanimated/plugin', // ← должен быть последним!
+      'react-native-worklets/plugin', // ← должен быть последним!
     ],
   };

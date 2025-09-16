@@ -48,15 +48,6 @@ const AppointmentItem = ({ appointment, date, dayIndex }: Props) => {
     opacity: isDragging ? 0.7 : 1,
   }));
 
-
-  // const handleStartDragging = (
-  //   dispatch: any,
-  //   payload: Parameters<typeof startDragging>[0]
-  // ) => {
-  //   const { width: SCREEN_WIDTH, height: SCREEN_HEIGHT } = Dimensions.get('window');
-  //   payload.left = (SCREEN_WIDTH-7)/8*(dayIndex+1);
-  //   dispatch(startDragging(payload));
-  // };
   const pan = Gesture.Pan()
     .onStart(()=> {
       // console.log('Start')
@@ -73,10 +64,6 @@ const AppointmentItem = ({ appointment, date, dayIndex }: Props) => {
     const newY = startY.value + translateY.value;
     const newStartMinute = Math.round(newY / CALENDAR_SETTINGS.PIXELS_PER_MINUTE);
     console.log((top + newStartMinute)/60)
-    // const newStart = formatMinutesToTime(newStartMinute);
-    // const newDate = detectDayFromPosition(startX.value + translateX.value);
-    // console.log(newStart)
-    // console.log(newDate)
   });
   
   return (

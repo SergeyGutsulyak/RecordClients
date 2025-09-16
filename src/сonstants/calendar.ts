@@ -10,4 +10,6 @@ export const CALENDAR_SETTINGS = {
   FULL_WIDTH: 24 * 60, // 24 часа × 60 мин = 1440 px
   FULL_HEIGHT: 24*60,
   INITIAL_SCROLL_X: 8 * 60, // 8 ч × 60 = 480 px
+  FREE_SPACE_TOLERANCE_MINUTES: 10, // если до записи < 10 мин — считаем занятым
+  TIME_GRID_WIDTH: 60,
 };
